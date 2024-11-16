@@ -69,6 +69,7 @@ body {
 
 #navbarSupportedContent {
   width: 100%;
+  position: fixed;
   background-color: #e4ca3a;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
@@ -79,7 +80,7 @@ body {
 
 #navbarSupportedContent.innerpage_navbar {
   background-color: #e4ca3a;
-  border-radius: 10px;
+  border-radius: 15px 15px 0 0;
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.25);
           box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.25);
 }
@@ -699,13 +700,13 @@ a:focus {
 
 .client_section .box .client_info .client_name h5 {
   font-weight: 600;
-  color: #db4f66;
+  color: #e4ca3a;
 }
 
 .client_section .box .client_info .client_name h6 {
   margin-bottom: 0;
-  color: #bfc0c0;
-  font-weight: normal;
+  color: #000;
+  font-weight: bolder;
   font-size: 15px;
 }
 
@@ -721,7 +722,7 @@ a:focus {
 .client_section .carousel-control-next {
   width: 45px;
   height: 125px;
-  background-color: #db4f66;
+  background-color: #e4ca3a;
   opacity: 1;
   font-size: 28px;
   font-weight: bold;
@@ -741,7 +742,7 @@ a:focus {
 /* info section */
 .info_section {
   position: relative;
-  background-color: #2d2d2d;
+  background-color: #000000;
   color: #ffffff;
   margin: 0 45px 45px;
 }

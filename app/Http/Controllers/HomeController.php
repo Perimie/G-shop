@@ -18,4 +18,16 @@ class HomeController extends Controller
     {
         return view('shop.index');
     }
+    public function why()
+    {
+        return view('why_us.index');
+    }
+    public function testimonial()
+    {
+        return view('testimonials.index');
+    }
+    public function contactUs()
+    {
+        return view('contact.index');
+    }
 }
