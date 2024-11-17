@@ -42,16 +42,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($data as $data)
+                    @foreach ($data as $datas)
                     <tr>
-                        <td>{{$data->category_name}}</td>
+                        <td>{{$datas->category_name}}</td>
 
                         <td>
-                            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal" data-id="{{ $data->id }}" data-name="{{ $data->category_name }}">Edit</button>
+                            <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal" data-id="{{ $datas->id }}" data-name="{{ $datas->category_name }}">Edit</button>
                         </td>
 
                         <td>
-                            <a class="btn btn-danger" onclick="confirm(event)" href="{{url('delete_category',$data->id)}}">Delete</a>
+                            <a class="btn btn-danger" onclick="confirm(event)" href="{{url('delete_category',$datas->id)}}">Delete</a>
                         </td>
                     
                     </tr>

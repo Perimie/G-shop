@@ -28,6 +28,49 @@
           </li>
         </ul>
         <div class="user_option">
+
+          @if (Route::has('login'))
+
+            @auth
+          <!-- Shopping bag-->
+            <div>
+              <a href="">
+                <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+              </a>
+            </div>
+            
+            <div class="dropdown">
+              <!-- Trigger: User's Username with Avatar -->
+              <a 
+                  class="btn btn-accent dropdown-toggle" 
+                  role="button" 
+                  id="dropdownMenuLink" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false">
+                  
+                  <!-- Username -->
+                  <span>{{ explode('@', Auth::user()->email)[0] }}</span>
+              </a>
+          
+              <!-- Dropdown Menu -->
+              <div class="dropdown-menu dropdown-menu-right shadow-lg" aria-labelledby="dropdownMenuLink">
+                  <!-- Edit Profile Option -->
+                  <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                      <i class="fas fa-user-edit text-primary mr-2"></i> Edit Profile
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <!-- Logout Option -->
+                  <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+                      @csrf
+                      <button type="submit" class="dropdown-item text-danger">
+                          <i class="fas fa-sign-out-alt text-danger mr-2"></i> Logout
+                      </button>
+                  </form>
+              </div>
+          </div>
+          
+        @else
           <a href="{{url('/login')}}">
             <i class="fa fa-user" aria-hidden="true"></i>
             <span>
@@ -41,15 +84,9 @@
               Register
             </span>
           </a>
-          <a href="">
-            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-          </a>
-          <form class="form-inline ">
-            <button class="btn nav_search-btn" type="submit">
-              <i class="fa fa-search" aria-hidden="true"></i>
-            </button>
-          </form>
-        </div>
+          @endauth
+
+          @endif
       </div>
     </nav>
   </header>

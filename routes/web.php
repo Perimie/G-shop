@@ -4,7 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Models\Products;
 
 Route::get('/', [HomeController::class,'home'])->name('home');
 Route::get('/shop', [HomeController::class,'shop'])->name('shop');
@@ -12,8 +12,15 @@ Route::get('/whyUs', [HomeController::class,'why'])->name('why');
 Route::get('/testimonials', [HomeController::class,'testimonial'])->name('testimonials');
 Route::get('/contactUs', [HomeController::class,'contactUs'])->name('contactUs');
 
+
+
+
+
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $product = Products::all();
+
+    return view('home.index', compact('product'));
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -34,3 +41,11 @@ route::get('delete_category/{id}',[AdminController::class,'delete_category'])->m
 route::post('edit_category/{id}',[AdminController::class,'edit_category'])->middleware(['auth','admin']);
 route::get('add_products',[AdminController::class,'add_products'])->middleware(['auth','admin']);
 route::post('upload_product',[AdminController::class,'upload_product'])->middleware(['auth','admin']);
+route::get('view_product',[AdminController::class,'view_product'])->middleware(['auth','admin']);
+route::get('delete_products/{id}',[AdminController::class,'delete_products'])->middleware(['auth','admin']);
+route::get('edit_products/{id}',[AdminController::class,'edit_products'])->middleware(['auth','admin']);
+route::post('update_products/{id}',[AdminController::class,'update_products'])->middleware(['auth','admin']);
+route::get('products_search',[AdminController::class,'products_search'])->middleware(['auth','admin']);
+
+route::get('products_details/{id}', [HomeController::class,'products_details']);
+route::get('add_cart/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);

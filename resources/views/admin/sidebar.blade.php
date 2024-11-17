@@ -8,7 +8,7 @@
             <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>Products</a>
               <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
                 <li><a href="{{url('add_products')}}">Add Products</a></li>
-                <li><a href="#">Page</a></li>
+                <li><a href="{{url('view_product')}}">View Products</a></li>
                 <li><a href="#">Page</a></li>
               </ul>
             </li>

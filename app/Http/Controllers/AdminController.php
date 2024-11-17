@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Products;
 use Illuminate\Http\Request;
-
+use Pest\Mutate\Mutators\Visibility\FunctionPublicToProtected;
 
 class AdminController extends Controller
 {
@@ -61,12 +61,14 @@ class AdminController extends Controller
             
         }
     }
+
     public function add_products()
     {
         $category = Category::all();
 
         return view('admin.add_products',compact('category'));
     }
+
     public function upload_product(Request $request)
     {
         $product = new Products;
@@ -93,6 +95,79 @@ class AdminController extends Controller
 
         return redirect()->back();
 
+    }
+    public function view_product()
+    {
+        $product = Products::paginate(5);
+
+        return view('admin.view_products',compact('product'));
+    }
+
+    public function delete_products($id)
+    {
+        $product = Products::find($id);
+         
+        $image_path = public_path('products/'.$product->image);
+
+        if(file_exists($image_path))
+        {
+            unlink($image_path);
+        }
+        
+        $product->delete();
+        
+        toastr()->timeout(3000)->closeButton()->success('Product Deleted Successfully');
+
+        return redirect()->back();
 
     }
+
+
+    public function edit_products($id)
+    {
+        $products = Products::find($id);
+        $data = Category::all();
+
+        return view("admin.edit_products",compact('products','data'));
+    }
+
+        public function update_products(Request $request, $id)
+    {
+
+        $products = Products::find($id);
+
+
+        $products->productName = $request->productName;
+        $products->description = $request->description;
+        $products->category = $request->category;
+        $products->price = $request->price;
+        $products->quantity = $request->quantity;
+
+        $image = $request->image;
+
+        if($image)
+            {
+                $imagename = time().'.'.$image->getClientOriginalExtension();
+                $request->image->move('products', $imagename );
+
+                $products->image=$imagename;
+            }
+
+        $products->save();
+
+        toastr()->timeout(3000)->closeButton()->success('Product updated successfully');
+        return redirect("/view_product");
+    }
+    
+    public function products_search( Request $request)
+    {
+        $search = $request->search;
+
+        $product = Products::where('productName', 'LIKE', '%'.$search.'%')
+        ->orWhere('category', 'LIKE', '%'.$search.'%')
+        ->paginate(5);
+
+        return view('admin.view_products', compact('product'));
+    }
+    
 }

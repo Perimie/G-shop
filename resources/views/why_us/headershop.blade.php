@@ -1,9 +1,11 @@
+
 <header class="header_section">
   <nav class="navbar navbar-expand-lg custom_nav-container ">
 
-    <div class="collapse navbar-collapse innerpage_navbar" id="navbarSupportedContent">
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav  ">
-        <li class="nav-item ">
+        <li class="nav-item active">
           <a class="nav-link" href="{{route('home')}}">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
@@ -11,7 +13,7 @@
             Shop
           </a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="{{route('why')}}">
             Why Us
           </a>
@@ -26,27 +28,65 @@
         </li>
       </ul>
       <div class="user_option">
+
+        @if (Route::has('login'))
+
+          @auth
+        <!-- Shopping bag-->
+          <div>
+            <a href="">
+              <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+            </a>
+          </div>
+          
+          <div class="dropdown">
+            <!-- Trigger: User's Username with Avatar -->
+            <a 
+                class="btn btn-accent dropdown-toggle" 
+                role="button" 
+                id="dropdownMenuLink" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                
+                <!-- Username -->
+                <span>{{ explode('@', Auth::user()->email)[0] }}</span>
+            </a>
+        
+            <!-- Dropdown Menu -->
+            <div class="dropdown-menu dropdown-menu-right shadow-lg" aria-labelledby="dropdownMenuLink">
+                <!-- Edit Profile Option -->
+                <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                    <i class="fas fa-user-edit text-primary mr-2"></i> Edit Profile
+                </a>
+                <div class="dropdown-divider"></div>
+                <!-- Logout Option -->
+                <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+                    @csrf
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="fas fa-sign-out-alt text-danger mr-2"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+      @else
         <a href="{{url('/login')}}">
           <i class="fa fa-user" aria-hidden="true"></i>
           <span>
             Login
           </span>
         </a>
+
         <a href="{{url('/register')}}">
           <i class="fa fa-vcard" aria-hidden="true"></i>
           <span>
             Register
           </span>
         </a>
-        <a href="">
-          <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-        </a>
-        <form class="form-inline ">
-          <button class="btn nav_search-btn" type="submit">
-            <i class="fa fa-search" aria-hidden="true"></i>
-          </button>
-        </form>
-      </div>
+        @endauth
+
+        @endif
     </div>
   </nav>
 </header>
