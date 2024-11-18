@@ -50,11 +50,11 @@
                             <td>{{$products->quantity}}</td>
                             <td><img style="height: 60px" src="products/{{$products->image}}" alt="product image"></td>
                             <td>
-                                <a class="btn btn-danger" onclick="confirm(event)" href="{{url('delete_products', $products->id)}}">Delete</a>
-                            </td>
-                            <td>
                                 <a class="btn btn-success" href="{{url('edit_products',$products->id)}}">Edit</a>
                             </td>
+                            <td>
+                              <a class="btn btn-danger" onclick="confirm(event)" href="{{url('delete_products', $products->id)}}">Delete</a>
+                          </td>
                           </tr>
 
             

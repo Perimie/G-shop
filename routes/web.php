@@ -33,6 +33,8 @@ route::get('admin/dashboard',[HomeController::class,'index'])->middleware(['auth
 
 route::get('admin/view_category',[AdminController::class,'category'])->middleware(['auth','admin'])->name('view_category');
 
+route::get('admin/view_orders',[AdminController::class,'view_orders'])->middleware(['auth','admin'])->name('view_orders');
+
 route::post('add_category',[AdminController::class,'add_category'])->middleware(['auth','admin']);
 route::get('delete_category/{id}',[AdminController::class,'delete_category'])->middleware(['auth','admin']);
 route::post('edit_category/{id}',[AdminController::class,'edit_category'])->middleware(['auth','admin']);
@@ -44,6 +46,7 @@ route::get('edit_products/{id}',[AdminController::class,'edit_products'])->middl
 route::post('update_products/{id}',[AdminController::class,'update_products'])->middleware(['auth','admin']);
 route::get('products_search',[AdminController::class,'products_search'])->middleware(['auth','admin']);
 
+
 route::get('products_details/{id}', [HomeController::class,'products_details']);
 route::get('add_cart/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);
 route::get('add_cart_details/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);
@@ -52,3 +55,4 @@ route::get('mycart', [HomeController::class,'mycart'])->middleware(['auth', 'ver
 route::get('cart_search',[HomeController::class,'cart_search'])->middleware(['auth', 'verified']);
 
 Route::post('confirm_order/{id}', [HomeController::class, 'confirm_order'])->middleware(['auth', 'verified']);
+Route::get('remove_tocart/{id}', [HomeController::class, 'remove_tocart'])->middleware(['auth', 'verified']);

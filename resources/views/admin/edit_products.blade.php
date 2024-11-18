@@ -74,7 +74,8 @@
 
                         <div class="input-group mt-3"style="width: 50%;">
                         
-                            <input class="btn btn-success" value="Update Product" type="submit" class="form-control"  aria-label="Default" aria-describedby="inputGroup-sizing-default"  >
+                            <input style="margin-right: 8px" class="btn btn-success" value="Update Product" type="submit" class="form-control"  aria-label="Default" aria-describedby="inputGroup-sizing-default"  >
+                            <a class="btn btn-danger" href="{{url('view_product')}}">Cancel</a>
                         </div>
 
                     </form>

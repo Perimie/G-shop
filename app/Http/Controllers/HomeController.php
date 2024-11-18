@@ -73,17 +73,17 @@ class HomeController extends Controller
         return view('contact.index',compact('count'));
     }
 
-    public function products_details($id)
-    {
+        public function products_details($id)
+        {
 
-        $product = Products::find($id);
-       
-    
-        $user_id = Auth::id();
-        $count = Cart::where('user_id', $user_id)->count();
+            $product = Products::find($id);
+        
+        
+            $user_id = Auth::id();
+            $count = Cart::where('user_id', $user_id)->count();
 
-        return view('home.products_details', compact('product','count'));
-    }
+            return view('home.products_details', compact('product','count'));
+        }
 
     public function add_cart($id)
     {
@@ -114,12 +114,11 @@ class HomeController extends Controller
     }
     public function mycart()
     {
-        $items = Cart::all();
 
         $user_id = Auth::id();
 
         //get specific data in the cart table base on user id
-        $show = Cart::where('user_id', $user_id)->get();;
+        $show = Cart::where('user_id', $user_id)->get();
         //for coounting sa laman ng cart
         $count = Cart::where('user_id', $user_id)->count();
 
@@ -154,28 +153,59 @@ class HomeController extends Controller
         $name = $request->name;
         $address = $request->rec_address;
         $phone = $request->phone;
+        $quantity = $request->quantity;
+        $totalPrice = $request->total_price; // Get the total price from the form input
 
         $user_id = Auth::id();
-
-        // Find the specific cart item
         $cart = Cart::where('user_id', $user_id)->where('id', $id)->first();
 
         if ($cart) {
-            // Create the order for the specific cart item
-            $order = new Order;
-            $order->name = $name;
-            $order->rec_address = $address;
-            $order->phone = $phone;
-            $order->user_id = $user_id;
-            $order->product_id = $cart->product_id;
-            $order->save();
+            $product = Products::find($cart->product_id);
 
-            // Remove the cart item after order creation
-            $cart->delete();
+            if ($product && $product->quantity >= $quantity) {
+                // Create the order and store the total price
+                $order = new Order();
+                $order->name = $name;
+                $order->rec_address = $address;
+                $order->phone = $phone;
+                $order->quantity = $quantity;
+                $order->total_price = $totalPrice; // Save the calculated total price
+                $order->user_id = $user_id;
+                $order->product_id = $cart->product_id;
+                $order->save();
+
+                // Update product stock
+                $product->quantity -= $quantity;
+                $product->save();
+
+                // Remove cart item
+                $cart->delete();
+
+                toastr()->timeout(3000)->closeButton()->success('Order placed successfully!');
+            } else {
+                toastr()->timeout(3000)->closeButton()->error('Insufficient stock for ' . $product->productName);
+            }
+        } else {
+            toastr()->timeout(3000)->closeButton()->error('Cart item not found.');
         }
 
-        toastr()->timeout(3000)->closeButton()->success('Place Order Successfully');
         return redirect()->back();
+    }
+
+
+
+
+
+    public function remove_tocart($id)
+    {
+        $show = Cart::find($id);
+         
+        $show->delete();
+        
+        toastr()->timeout(3000)->closeButton()->success('Remove to cart Successfully');
+
+        return redirect()->back();
+
     }
 
 

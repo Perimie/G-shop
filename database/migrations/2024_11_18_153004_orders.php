@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('rec_address')->nullable();
             $table->string('phone')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->double('total_price')->nullable();
             $table->string('status')->default('in progress');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');

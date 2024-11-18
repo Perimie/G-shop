@@ -71,10 +71,8 @@
                             </h6>
                         {{-- Quantity --}}
                         <h6>
-                            Quantity: 
-                            <span>
-                                {{$product->quantity}}
-                            </span>
+                            Available Quantity: 
+                            <span id="availableQuantity">{{$product->quantity}}</span>
                         </h6>
                     </div>
 

@@ -131,6 +131,7 @@ class AdminController extends Controller
         return view("admin.edit_products",compact('products','data'));
     }
 
+
         public function update_products(Request $request, $id)
     {
 
@@ -168,6 +169,11 @@ class AdminController extends Controller
         ->paginate(5);
 
         return view('admin.view_products', compact('product'));
+    }
+
+    public function view_orders()
+    {
+        return view('admin.orders');
     }
     
 }
