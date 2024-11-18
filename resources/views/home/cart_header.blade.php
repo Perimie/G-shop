@@ -64,7 +64,7 @@
             @auth
           <!-- Shopping bag-->
             <div>
-              <a href="{{url('mycart')}}" class="{{ request()->is('mycart') ? 'active' : '' }}" data-toggle="tooltip" data-placement="top" title="Items in Cart">
+                <a href="{{url('mycart')}}" class="{{ request()->is('mycart') ? 'active' : '' }}" data-toggle="tooltip" data-placement="top" title="Items in Cart">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                 <span class="cart-count" style="background-color: #ff0000; color: white; border-radius: 50%; padding: 5px 10px; font-size: 14px;">
                     {{ $count ?? 0 }}

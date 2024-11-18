@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Products;
 use App\Models\User;
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -145,7 +146,38 @@ class HomeController extends Controller
     $count = Cart::where('user_id', $user_id)->count();
 
     return view('home.cart_items', compact('show','count'));
+    
 }
+
+    public function confirm_order(Request $request, $id)
+    {
+        $name = $request->name;
+        $address = $request->rec_address;
+        $phone = $request->phone;
+
+        $user_id = Auth::id();
+
+        // Find the specific cart item
+        $cart = Cart::where('user_id', $user_id)->where('id', $id)->first();
+
+        if ($cart) {
+            // Create the order for the specific cart item
+            $order = new Order;
+            $order->name = $name;
+            $order->rec_address = $address;
+            $order->phone = $phone;
+            $order->user_id = $user_id;
+            $order->product_id = $cart->product_id;
+            $order->save();
+
+            // Remove the cart item after order creation
+            $cart->delete();
+        }
+
+        toastr()->timeout(3000)->closeButton()->success('Place Order Successfully');
+        return redirect()->back();
+    }
+
 
     
 }
