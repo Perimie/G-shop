@@ -24,7 +24,7 @@
                 <h6>
                   Price
                   <span>
-                    {{$products->price}}
+                    ₱ {{$products->price}}
                   </span>
                 </h6>
               </div>

@@ -5,7 +5,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav  ">
-        <li class="nav-item active">
+        <li class="nav-item">
           <a class="nav-link" href="{{route('home')}}">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
@@ -18,7 +18,7 @@
             Why Us
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="{{route('testimonials')}}">
             Testimonial
           </a>
@@ -34,9 +34,12 @@
           @auth
         <!-- Shopping bag-->
           <div>
-            <a href="">
-              <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-            </a>
+            <a href="{{url('mycart')}}" class="{{ request()->is('mycart') ? 'active' : '' }}" data-toggle="tooltip" data-placement="top" title="Items in Cart">
+              <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+              <span class="cart-count" style="background-color: #ff0000; color: white; border-radius: 50%; padding: 5px 10px; font-size: 14px;">
+                  {{ $count ?? 0 }}
+              </span>
+          </a>
           </div>
           
           <div class="dropdown">

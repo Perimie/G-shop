@@ -16,43 +16,72 @@ class HomeController extends Controller
     }
     public function home()
     {
-        $product = Products::all();
 
-        return view('home.index', compact('product'));
+        $product = Products::all();
+        $user_id = Auth::id();
+        $count = Cart::where('user_id', $user_id)->count();
+
+        return view('home.index', compact('product','count'));
     }
 
     public function login_home()
-    {
-        $product = Products::all();
-
-        return view('home.index', compact('product'));
+{
+    if (!Auth::check()) {
+        return redirect()->route('login'); 
     }
+
+    $product = Products::all();
+    $user_id = Auth::id();
+    $count = Cart::where('user_id', $user_id)->count();
+
+    return view('home.index', compact('product', 'count'));
+}
+
 
     public function shop()
     {
+       
+    
+        $user_id = Auth::id();
+        $count = Cart::where('user_id', $user_id)->count();
         $product = Products::all();
-        return view('shop.index',compact('product'));
+        return view('shop.index',compact('product','count'));
     }
     public function why()
     {
-        return view('why_us.index');
+       
+        $user_id = Auth::id();
+        $count = Cart::where('user_id', $user_id)->count();
+
+        return view('why_us.index',compact('count'));
     }
     public function testimonial()
     {
-        return view('testimonials.index');
+
+       
+        $user_id = Auth::id();
+        $count = Cart::where('user_id', $user_id)->count();
+        return view('testimonials.index',compact('count'));
     }
     public function contactUs()
     {
-        return view('contact.index');
+     
+    
+        $user_id = Auth::id();
+        $count = Cart::where('user_id', $user_id)->count();
+        return view('contact.index',compact('count'));
     }
 
     public function products_details($id)
     {
 
         $product = Products::find($id);
+       
+    
+        $user_id = Auth::id();
+        $count = Cart::where('user_id', $user_id)->count();
 
-
-        return view('home.products_details', compact('product'));
+        return view('home.products_details', compact('product','count'));
     }
 
     public function add_cart($id)
@@ -81,6 +110,42 @@ class HomeController extends Controller
 
         return redirect()->back();
 
-
     }
+    public function mycart()
+    {
+        $items = Cart::all();
+
+        $user_id = Auth::id();
+
+        //get specific data in the cart table base on user id
+        $show = Cart::where('user_id', $user_id)->get();;
+        //for coounting sa laman ng cart
+        $count = Cart::where('user_id', $user_id)->count();
+
+        return view('home.cart_items', compact('show','count'));
+    }
+
+    public function cart_search(Request $request)
+{
+    $search = $request->input('search', '');
+    $user_id = Auth::id();
+
+    // Check if there is a search query
+    if ($search) {
+        // If there's a search query, fetch all matching records without pagination
+        $show = Cart::with('product')
+            ->whereHas('product', function ($query) use ($search) {
+                $query->where('productName', 'LIKE', '%' . $search . '%');
+            })
+            ->get(); // Use get() to fetch all results without pagination
+    } else {
+        // If there's no search query, paginate the results
+        $show = Cart::where('user_id', Auth::id())->paginate(5);
+    }
+    $count = Cart::where('user_id', $user_id)->count();
+
+    return view('home.cart_items', compact('show','count'));
+}
+
+    
 }

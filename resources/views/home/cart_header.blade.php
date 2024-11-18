@@ -1,11 +1,41 @@
 
 <header class="header_section">
+    <style>
+        /* Default cart icon style */
+        a {
+            position: relative;
+            text-decoration: none;
+            color: black;
+            display: inline-flex; /* Make it an inline-flex element for proper alignment */
+            align-items: center; /* Vertically center the content */
+            justify-content: center; /* Horizontally center the content */
+            padding: 6px 15px; /* Add padding for a rectangular shape */
+            border-radius: 10px; /* Rounded corners (border-radius for the rectangle) */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background */
+        }
+
+        /* Style for the active state */
+        a.active {
+            background-color: white; /* White background for active state */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+        }
+
+        /* Style for the icon when active */
+        a.active i {
+            color: black; /* Change the icon color when active */
+        }
+
+        /* Optional: Hover effect for better interactivity */
+        a:hover {
+            background-color: #f0f0f0; /* Light gray background on hover */
+        }
+    </style>
     <nav class="navbar navbar-expand-lg custom_nav-container ">
 
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav  ">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{{route('home')}}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
@@ -40,7 +70,6 @@
                     {{ $count ?? 0 }}
                 </span>
             </a>
-            
             </div>
             
             <div class="dropdown">

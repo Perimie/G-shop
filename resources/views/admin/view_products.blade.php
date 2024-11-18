@@ -40,12 +40,13 @@
                       </tr>
                     </thead>
                     <tbody>
+                      @if ($product->count() > 0)
                         @foreach ($product as $products)
                         <tr>
                             <td>{{$products->productName}}</td>
                             <td>{!!Str::limit($products->description, 20)!!}</td>
                             <td>{{$products->category}}</td>
-                            <td>{{$products->price}}</td>
+                            <td>₱ {{$products->price}}</td>
                             <td>{{$products->quantity}}</td>
                             <td><img style="height: 60px" src="products/{{$products->image}}" alt="product image"></td>
                             <td>
@@ -63,7 +64,11 @@
                   </table>
                 
                   <div class="pagination justify-content-center">{{ $product->onEachSide(1)->links()}}</div>
-                  
+                  @else
+                  <tr>
+                      <td colspan="4">No items found in the table.</td>
+                  </tr>
+              @endif
                   
             </div>
 

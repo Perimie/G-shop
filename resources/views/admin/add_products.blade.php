@@ -34,7 +34,7 @@
 
                     <div class="input-group mb-3 "style="width: 50%;">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Price</span>
+                            <span class="input-group-text" id="inputGroup-sizing-default">Price (₱)</span>
                         </div>
                         <input name="price" type="number" step="0.01" min="0"  class="form-control"  aria-label="Default" aria-describedby="inputGroup-sizing-default" required >
                     </div>

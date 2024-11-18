@@ -35,7 +35,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="inputGroup-sizing-default">Product Price</span>
                             </div>
-                            <input name="price" type="text" class="form-control"  aria-label="Default" aria-describedby="inputGroup-sizing-default" value="{{$products->price}}" >
+                            <input name="price" type="text" class="form-control"  aria-label="Default" aria-describedby="inputGroup-sizing-default" value="₱ {{$products->price}}" >
                         </div>
 
                         <div class="input-group mb-3 "style="width: 50%">

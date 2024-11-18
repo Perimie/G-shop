@@ -24,12 +24,14 @@
               <h6>
                 Price
                 <span>
-                  {{$products->price}}
+                  ₱ {{$products->price}}
                 </span>
               </h6>
             </div>
             <div style="padding: 15px">
               <a class="btn btn-info" href="{{url('products_details',$products->id)}}">Details</a>
+
+              <a class="btn btn-success" href="{{url('add_cart',$products->id)}}">Add to Cart</a>
             </div>
         </div>
       </div>

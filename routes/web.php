@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Products;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Cart;
 
 Route::get('/', [HomeController::class,'home'])->name('home');
 Route::get('/shop', [HomeController::class,'shop'])->name('shop');
@@ -16,12 +18,7 @@ Route::get('/contactUs', [HomeController::class,'contactUs'])->name('contactUs')
 
 
 
-Route::get('/dashboard', function () {
-    $product = Products::all();
-
-    return view('home.index', compact('product'));
-
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard',[HomeController::class,'login_home'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -49,3 +46,6 @@ route::get('products_search',[AdminController::class,'products_search'])->middle
 
 route::get('products_details/{id}', [HomeController::class,'products_details']);
 route::get('add_cart/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);
+route::get('add_cart_details/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);
+route::get('mycart', [HomeController::class,'mycart'])->middleware(['auth', 'verified']);
+route::get('cart_search',[HomeController::class,'cart_search'])->middleware(['auth', 'verified']);
