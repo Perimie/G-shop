@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Pest\Mutate\Mutators\Visibility\FunctionPublicToProtected;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Pagination\Paginator;
 
 class AdminController extends Controller
 {
@@ -166,8 +168,8 @@ class AdminController extends Controller
         $search = $request->search;
 
         $product = Products::where('productName', 'LIKE', '%'.$search.'%')
-        ->orWhere('category', 'LIKE', '%'.$search.'%')
-        ->paginate(5);
+        ->orWhere('category', 'LIKE', '%'.$search.'%')->paginate(5)
+       ;
 
         return view('admin.view_products', compact('product'));
     }
@@ -175,9 +177,10 @@ class AdminController extends Controller
     public function view_orders()
     {
 
-         $order = Order::paginate(5);
+         $orders = Order::paginate(5);
 
-        return view('admin.orders',compact('order'));
+
+        return view('admin.orders',compact('orders'));
     }
     
 
@@ -210,9 +213,50 @@ class AdminController extends Controller
     {
         $search = $request->search;
 
-        $order = Order::where('name', 'LIKE', '%'.$search.'%')
+        $orders = Order::where('name', 'LIKE', '%'.$search.'%')
         ->paginate(5);
 
-        return view('admin.orders', compact('order'));
+        return view('admin.orders', compact('orders'));
     }
+
+    public function print_invoice($id)
+    {
+        $invoice = Order::with('product')->find($id);
+    
+        $pdf = Pdf::loadView('admin.invoice', compact('invoice'));
+    
+        return $pdf->download('invoice.pdf');
+    }
+
+
+    public function print_multiple_invoices($ids)
+{
+    // Split the comma-separated IDs into an array
+    $invoiceIds = explode(',', $ids);
+
+    // Retrieve the invoices using the given IDs
+    $invoices = Order::with('product')->whereIn('id', $invoiceIds)->get();
+
+    // Check if all selected invoices belong to the same user
+    $userId = $invoices->first()->user_id; // Get the user_id of the first invoice
+    foreach ($invoices as $invoice) {
+        if ($invoice->user_id != $userId) {
+            // If any invoice has a different user_id, return an error
+            return response()->json(['error' => 'Selected invoices do not belong to the same user.'], 403);
+        }
+    }
+
+    // Calculate the total quantity and total price across all invoices
+    $totalQuantity = $invoices->sum('quantity');
+    $totalPrice = $invoices->sum('total_price');
+    
+    // Load the view for multiple invoices and pass the totals
+    $pdf = Pdf::loadView('admin.multiple_invoice', compact('invoices', 'totalQuantity', 'totalPrice'));
+
+    return $pdf->download('invoices.pdf');
+}
+
+
+
+    
 }

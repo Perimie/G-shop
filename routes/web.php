@@ -48,6 +48,9 @@ route::get('products_search',[AdminController::class,'products_search'])->middle
 
 route::post('on_my_way/{id}',[AdminController::class,'on_my_way'])->middleware(['auth','admin']);
 route::get('order_search',[AdminController::class,'order_search'])->middleware(['auth','admin']);
+route::get('print_invoice/{id}',[AdminController::class,'print_invoice'])->middleware(['auth','admin']);
+Route::get('print_multiple_invoices/{ids}', [AdminController::class, 'print_multiple_invoices'])->middleware(['auth', 'admin']);
+
 
 route::get('products_details/{id}', [HomeController::class,'products_details']);
 route::get('add_cart/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);
@@ -58,3 +61,8 @@ route::get('cart_search',[HomeController::class,'cart_search'])->middleware(['au
 
 Route::post('confirm_order/{id}', [HomeController::class, 'confirm_order'])->middleware(['auth', 'verified']);
 Route::get('remove_tocart/{id}', [HomeController::class, 'remove_tocart'])->middleware(['auth', 'verified']);
+
+
+
+Route::post('/send-contact', [HomeController::class, 'sendContact'])->name('sendContact')->middleware(['auth', 'verified']);
+

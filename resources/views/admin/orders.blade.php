@@ -4,23 +4,51 @@
     @include('admin.css')
 
     <style>
+      body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .page-content {
+            height: 90vh; /* Set the page content to 90% of the viewport height */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            flex-grow: 1;
+        }
         .table-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    /* Center text and content inside table cells */
-    .table th, .table td {
-        text-align: center;
-        vertical-align: middle;
-    }
+        /* Center text and content inside table cells */
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
 
-    /* Ensure images are centered inside the cells */
-    .table td img {
-        display: block;
-        margin: 0 auto;
-    }
+        /* Ensure images are centered inside the cells */
+        .table td img {
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Align Search Bar and Print Button */
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .search-container .form-inline {
+            flex-grow: 1;
+        }
+
+        .print-btn {
+            margin-left: 10px;
+        }
     </style>
   </head>
   <body>
@@ -35,16 +63,25 @@
       <div class="page-content">
         <div class="page-header">
           <div class="container-fluid">
+            
+            <!-- Create a container for the search bar and print button -->
+            <div class="search-container">
+              <!-- Search Bar -->
+              <form class="form-inline my-2 my-lg-0" action="{{url('order_search')}}" method="GET">
+                @csrf
+                <input name="search" class="form-control mr-sm-2 mb-5" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success mb-5" type="submit">Search</button>
+              </form>
 
-            <form class="form-inline my-2 my-lg-0" action="{{url('order_search')}}" method="GET">
-              @csrf
-              <input name="search" class="form-control mr-sm-2 mb-5"  type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success mb-5 " type="submit">Search</button>
-            </form>
+              <!-- Print Selected Invoices Button -->
+              <button id="printSelected" class="btn btn-primary mb-5 print-btn">Print Selected Invoices</button>
+            </div>
+
             <table class="table table-dark">
                 <thead>
                   <tr>
-                    <th  scope="col">Customer Name</th>
+                    <th ></th>
+                    <th scope="col">Customer Name</th>
                     <th scope="col">Address</th>
                     <th scope="col">Phone</th>
                     <th scope="col">Product Name</th>
@@ -53,40 +90,45 @@
                     <th scope="col">Quantity</th>
                     <th scope="col">Status</th>
                     <th scope="col">Change Status</th>
+                    <th scope="col">Invoice</th>
                   </tr>
                 </thead>
                 <tbody>
-                  @if ($order->count() > 0)
-                    @foreach ($order as $orders)
+                  @if ($orders->count() > 0)
+                    @foreach ($orders as $orderss)
                     <tr>
-                      <th scope="row">{{$orders->name}}</th>
-                      <td>{{$orders->rec_address}}</td>
-                      <td>{{$orders->phone}}</td>
-                      <td>{{$orders->product->productName}}</td>
-                      <td><img style="height: 60px" src="/products/{{$orders->product->image}}" alt="product image"></td>
-                      <td>₱{{$orders->total_price}}</td>
-                      <td>{{$orders->quantity}}</td>
-                      <td>{{$orders->status}}</td>
+                      <td><input type="checkbox" class="invoiceCheckbox" data-id="{{ $orderss->id }}" data-user-id="{{ $orderss->user_id }}"></td>
+                      <th scope="row">{{$orderss->name}}</th>
+                      <td>{{$orderss->rec_address}}</td>
+                      <td>{{$orderss->phone}}</td>
+                      <td>{{$orderss->product->productName}}</td>
+                      <td><img style="height: 60px" src="/products/{{$orderss->product->image}}" alt="product image"></td>
+                      <td>₱{{$orderss->total_price}}</td>
+                      <td>{{$orderss->quantity}}</td>
+                      <td>{{$orderss->status}}</td>
                       <td>
-                        <button type="button" class="btn btn-info btn-md mb-2" data-toggle="modal" data-target="#myModal" data-id="{{ $orders->id }}" data-name="{{ $orders->status }}">Change Status</button>
+                        <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal" data-id="{{ $orderss->id }}" data-name="{{ $orderss->status }}">Change Status</button>
                       </td>
-                      
-                      
+                      <td>
+                        <a class="btn btn-secondary" href="{{url('print_invoice',$orderss->id)}}">Print</a>
+                      </td>
                     </tr>
                     @endforeach
-                  
                 </tbody>
               </table>
-              <div class="pagination justify-content-center">{{ $order->onEachSide(1)->links()}}</div>
+              <div class="pagination justify-content-center">
+                {{ $orders->links() }}
               @else
                   <tr>
                       <td colspan="4">No items found in the table.</td>
                   </tr>
               @endif
-
+          </div>
       </div>
-      <!-- Modal Structure -->
-      <div id="myModal" class="modal fade" role="dialog">
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
@@ -99,12 +141,11 @@
                         <div class="form-group">
                           <label for="editCategoryName">Change Status :</label>
                           <select class="form-control" id="editStatus" name="status" required>
-                            
-                              <option value="In Progress">in Progress</option>
-                              <option value="On the Way">on the Way</option>
-                              <option value="Delivered">delivered</option>
+                            <option value="In Progress">in Progress</option>
+                            <option value="On the Way">on the Way</option>
+                            <option value="Delivered">delivered</option>
                           </select>
-                      </div>                      
+                      </div>                       
                         <button type="submit" class="btn btn-success">Save</button>
                     </form>
                 </div>
@@ -114,30 +155,48 @@
             </div>
         </div>
     </div>
-    </div>
+
     <!-- JavaScript files-->
-    <script src="{{asset('admincss/vendor/popper.js/umd/popper.min.js')}}"> </script>
     <script src="{{asset('admincss/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('admincss/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('admincss/vendor/jquery.cookie/jquery.cookie.js')}}"> </script>
-    <script src="{{asset('admincss/vendor/chart.js/Chart.min.js')}}"></script>
-    <script src="{{asset('admincss/vendor/jquery-validation/jquery.validate.min.js')}}"></script>
-    <script src="{{asset('admincss/js/charts-home.js')}}"></script>
-    <script src="{{asset('admincss/js/front.js')}}"></script>
 
     <script>
         $(document).ready(function(){
-      $('#myModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget); // Button that triggered the modal
-          var id = button.data('id'); // Extract info from data-* attributes
-          var status = button.data('name'); // Current status
-          
-          var modal = $(this);
-          modal.find('#editStatus').val(status); // Set the dropdown to the current status
-          modal.find('#editForm').attr('action', '/on_my_way/' + id); // Set form action
-      });
-  });
+            // Select All Checkboxes functionality
+            $('#selectAll').on('click', function(){
+                $('.invoiceCheckbox').prop('checked', this.checked);
+            });
 
-      </script>
+            // Print selected invoices
+            $('#printSelected').on('click', function(){
+                let selectedIds = [];
+                let selectedUserId = null;
+                let isValid = true;
+
+                $('.invoiceCheckbox:checked').each(function(){
+                    selectedIds.push($(this).data('id'));
+                    
+                    // Check if all selected invoices belong to the same user
+                    if (selectedUserId === null) {
+                        selectedUserId = $(this).data('user-id');
+                    } else if ($(this).data('user-id') !== selectedUserId) {
+                        isValid = false; // Set to false if any invoice has a different user_id
+                    }
+                });
+
+                if (!isValid) {
+                    alert("You cannot print invoices that do not belong to the same user.");
+                    return;
+                }
+
+                if (selectedIds.length > 0) {
+                    let printUrl = '/print_multiple_invoices/' + selectedIds.join(',');
+                    window.location.href = printUrl; // Redirect to the print URL
+                } else {
+                    alert("Please select at least one invoice.");
+                }
+            });
+        });
+    </script>
   </body>
 </html>

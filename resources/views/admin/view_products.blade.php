@@ -2,6 +2,20 @@
 <html>
   <head> 
     @include('admin.css')
+    <style>
+      body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .page-content {
+            height: 90vh; /* Set the page content to 90% of the viewport height */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+            flex-grow: 1;
+        }
+    </style>
     
   </head>
   <body>
@@ -63,7 +77,9 @@
                     </tbody>
                   </table>
                 
-                  <div class="pagination justify-content-center">{{ $product->onEachSide(1)->links()}}</div>
+                  <div class="pagination justify-content-center">
+                    {{ $product->links() }}
+                </div>
                   @else
                   <tr>
                       <td colspan="4">No items found in the table.</td>

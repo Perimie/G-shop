@@ -8,6 +8,9 @@ use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\ContactMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class HomeController extends Controller
 {
@@ -207,6 +210,25 @@ class HomeController extends Controller
         return redirect()->back();
 
     }
+
+    public function sendContact(Request $request)
+{
+    // Validate the form data
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'phone' => 'required|string|max:15',
+        'message' => 'required|string'
+    ]);
+
+    // Send email
+    Mail::to('cjoco166@gmail.com')->send(new ContactMail($validatedData));
+    toastr()->timeout(3000)->closeButton()->success('Message Successfully');
+
+    // Redirect or show a success message
+    return redirect()->back();
+}
+
 
 
     
