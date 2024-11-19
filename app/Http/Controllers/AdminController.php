@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Pest\Mutate\Mutators\Visibility\FunctionPublicToProtected;
@@ -173,7 +174,45 @@ class AdminController extends Controller
 
     public function view_orders()
     {
-        return view('admin.orders');
+
+         $order = Order::paginate(5);
+
+        return view('admin.orders',compact('order'));
     }
     
+
+    public function on_my_way(Request $request, $id)
+    {
+
+        $request->validate([
+            'status' => 'required|string'
+        ]);
+
+        $order = Order::find($id);
+
+        if($order)
+        {
+            $order->status = $request->status;
+            $order->save();
+            toastr()->timeout(3000)->closeButton()->success('Status Updated Sucessfully');
+            return redirect()->back()->with('Status Updated Successfully');
+           
+        }else{
+            toastr()->timeout(3000)->closeButton()->error('Status not Updated');
+
+            return redirect()->back()->with('Status Not Updated');
+
+            
+        }
+    }
+
+    public function order_search( Request $request)
+    {
+        $search = $request->search;
+
+        $order = Order::where('name', 'LIKE', '%'.$search.'%')
+        ->paginate(5);
+
+        return view('admin.orders', compact('order'));
+    }
 }

@@ -46,6 +46,8 @@ route::get('edit_products/{id}',[AdminController::class,'edit_products'])->middl
 route::post('update_products/{id}',[AdminController::class,'update_products'])->middleware(['auth','admin']);
 route::get('products_search',[AdminController::class,'products_search'])->middleware(['auth','admin']);
 
+route::post('on_my_way/{id}',[AdminController::class,'on_my_way'])->middleware(['auth','admin']);
+route::get('order_search',[AdminController::class,'order_search'])->middleware(['auth','admin']);
 
 route::get('products_details/{id}', [HomeController::class,'products_details']);
 route::get('add_cart/{id}', [HomeController::class,'add_cart'])->middleware(['auth', 'verified']);
