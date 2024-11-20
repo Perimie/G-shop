@@ -8,6 +8,7 @@ use App\Models\Products;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 
+
 Route::get('/', [HomeController::class,'home'])->name('home');
 Route::get('/shop', [HomeController::class,'shop'])->name('shop');
 Route::get('/whyUs', [HomeController::class,'why'])->name('why');
@@ -67,4 +68,8 @@ Route::get('remove_tocart/{id}', [HomeController::class, 'remove_tocart'])->midd
 
 
 Route::post('/send-contact', [HomeController::class, 'sendContact'])->name('sendContact')->middleware(['auth', 'verified']);
+
+
+
+
 

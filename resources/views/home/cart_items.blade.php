@@ -86,8 +86,8 @@
                                 <input type="hidden" id="calculatedPrice" name="total_price">
                         
                             </div>
-                            <button type="submit" class="btn btn-primary">Cash On Delivery</button>
-                            <a href="" class="btn btn-success">Pay Using Card</a>
+                            <button type="submit" class="btn btn-primary">Place Order</button>
+                            
                         </form>
                     </div>
                     <div class="modal-footer">
