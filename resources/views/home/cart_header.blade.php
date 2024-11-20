@@ -2,7 +2,7 @@
 <header class="header_section">
     <style>
         /* Default cart icon style */
-        a {
+        #cart {
             position: relative;
             text-decoration: none;
             color: black;
@@ -15,18 +15,46 @@
         }
 
         /* Style for the active state */
-        a.active {
-            background-color: white; /* White background for active state */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
-        }
+        #cart.active {
+        background-color: white; /* White background for active state */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+      }
 
-        /* Style for the icon when active */
-        a.active i {
-            color: black; /* Change the icon color when active */
-        }
+      /* Style for the icon when active */
+      #cart.active i {
+          color: black; /* Change the icon color when active */
+      }
 
         /* Optional: Hover effect for better interactivity */
-        a:hover {
+        #cart:hover {
+            background-color: #f0f0f0; /* Light gray background on hover */
+        }
+
+        #order {
+            position: relative;
+            text-decoration: none;
+            color: black;
+            display: inline-flex; /* Make it an inline-flex element for proper alignment */
+            align-items: center; /* Vertically center the content */
+            justify-content: center; /* Horizontally center the content */
+            padding: 6px 15px; /* Add padding for a rectangular shape */
+            border-radius: 10px; /* Rounded corners (border-radius for the rectangle) */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background */
+        }
+
+        /* Style for the active state */
+        #order.active {
+        background-color: white; /* White background for active state */
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+      }
+
+      /* Style for the icon when active */
+      #order.active i {
+          color: black; /* Change the icon color when active */
+      }
+
+        /* Optional: Hover effect for better interactivity */
+        #order:hover {
             background-color: #f0f0f0; /* Light gray background on hover */
         }
     </style>
@@ -62,11 +90,22 @@
           @if (Route::has('login'))
 
             @auth
+
+            <div>
+              <a id="order" href="{{url('my_orders')}}" class="{{ request()->is('my_orders') ? 'active' : '' }}" data-toggle="tooltip" data-placement="top" title="My Ordes">
+                My Orders
+                <span class="cart-count" style="background-color: #ff0000; color: white; border-radius: 50%; padding: 5px 10px; font-size: 10px;">
+                    {{ $orders ?? 0 }}
+                </span>
+            </a>
+            
+            </div>
+
           <!-- Shopping bag-->
             <div>
-                <a href="{{url('mycart')}}" class="{{ request()->is('mycart') ? 'active' : '' }}" data-toggle="tooltip" data-placement="top" title="Items in Cart">
+                <a id="cart" href="{{url('mycart')}}" class="{{ request()->is('mycart') ? 'active' : '' }}" data-toggle="tooltip" data-placement="top" title="Items in Cart">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                <span class="cart-count" style="background-color: #ff0000; color: white; border-radius: 50%; padding: 5px 10px; font-size: 14px;">
+                <span class="cart-count" style="background-color: #ff0000; color: white; border-radius: 50%; padding: 5px 10px; font-size: 10px;">
                     {{ $count ?? 0 }}
                 </span>
             </a>

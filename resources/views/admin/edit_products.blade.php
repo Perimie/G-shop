@@ -84,6 +84,7 @@
 
       </div>
     </div>
+    @include('admin.footer')
     <!-- JavaScript files-->
     <script src="{{asset('admincss/vendor/popper.js/umd/popper.min.js')}}"> </script>
     <script src="{{asset('admincss/vendor/jquery/jquery.min.js')}}"></script>

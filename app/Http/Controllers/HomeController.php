@@ -16,48 +16,81 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+        $users= User::where('usertype','user')->get()->count();
+
+        $products = Products::all()->count();
+
+        $orders = Order::all()->count();
+
+        $deliveries = Order::where('status', 'delivered')->get()->count();
+
+        return view('admin.index',compact('users','products','orders','deliveries'));
     }
-    public function home()
+    public function home(Request $request)
     {
 
-        $product = Products::all();
+        $product = Products::paginate(12);
         $user_id = Auth::id();
         $count = Cart::where('user_id', $user_id)->count();
+        $orders = Order::where('user_id', $user_id)->count();
 
-        return view('home.index', compact('product','count'));
+        if ($request->ajax()) {
+            return view('home.shop', compact('product'))->render();
+        }
+
+
+        return view('home.index', compact('product','count','orders'));
     }
 
-    public function login_home()
+    public function login_home(Request $request)
 {
     if (!Auth::check()) {
         return redirect()->route('login'); 
     }
 
-    $product = Products::all();
+    $product = Products::paginate(12);
     $user_id = Auth::id();
     $count = Cart::where('user_id', $user_id)->count();
+    $orders = Order::where('user_id', $user_id)->count();
 
-    return view('home.index', compact('product', 'count'));
+    if ($request->ajax()) {
+        return view('home.shop', compact('product'))->render();
+    }
+
+    return view('home.index', compact('product', 'count','orders'));
 }
 
 
-    public function shop()
+    public function shop(Request $request)
     {
        
     
         $user_id = Auth::id();
         $count = Cart::where('user_id', $user_id)->count();
-        $product = Products::all();
-        return view('shop.index',compact('product','count'));
+        $orders = Order::where('user_id', $user_id)->count();
+        $query = Products::query();
+
+    // If a search term is provided, filter the products
+    if ($request->has('search') && !empty($request->search)) {
+        $query->where('productName', 'LIKE', '%' . $request->search . '%');
+    }
+
+    // Paginate the filtered or full product list
+    $product = $query->paginate(12);
+
+        if ($request->ajax()) {
+            return view('shop.shop', compact('product'))->render();
+        }
+        return view('shop.index',compact('product','count','orders'));
     }
     public function why()
     {
        
         $user_id = Auth::id();
         $count = Cart::where('user_id', $user_id)->count();
+        $orders = Order::where('user_id', $user_id)->count();
 
-        return view('why_us.index',compact('count'));
+        return view('why_us.index',compact('count','orders'));
     }
     public function testimonial()
     {
@@ -65,7 +98,8 @@ class HomeController extends Controller
        
         $user_id = Auth::id();
         $count = Cart::where('user_id', $user_id)->count();
-        return view('testimonials.index',compact('count'));
+        $orders = Order::where('user_id', $user_id)->count();
+        return view('testimonials.index',compact('count','orders'));
     }
     public function contactUs()
     {
@@ -73,7 +107,8 @@ class HomeController extends Controller
     
         $user_id = Auth::id();
         $count = Cart::where('user_id', $user_id)->count();
-        return view('contact.index',compact('count'));
+        $orders = Order::where('user_id', $user_id)->count();
+        return view('contact.index',compact('count','orders'));
     }
 
         public function products_details($id)
@@ -84,8 +119,9 @@ class HomeController extends Controller
         
             $user_id = Auth::id();
             $count = Cart::where('user_id', $user_id)->count();
+            $orders = Order::where('user_id', $user_id)->count();
 
-            return view('home.products_details', compact('product','count'));
+            return view('home.products_details', compact('product','count','orders'));
         }
 
     public function add_cart($id)
@@ -120,12 +156,22 @@ class HomeController extends Controller
 
         $user_id = Auth::id();
 
+        $allItems = Cart::where('user_id', Auth::id())
+        ->with('product')->get();
+        
+        $totalPrice = $allItems->sum(function ($cartItem) {
+            return $cartItem->product->price; // Just sum the price of the product
+        });
+
         //get specific data in the cart table base on user id
-        $show = Cart::where('user_id', $user_id)->get();
+       
+        $show = Cart::where('user_id', $user_id)
+        ->with('product')->paginate(5);
         //for coounting sa laman ng cart
         $count = Cart::where('user_id', $user_id)->count();
+        $orders = Order::where('user_id', $user_id)->count();
 
-        return view('home.cart_items', compact('show','count'));
+        return view('home.cart_items', compact('show','count','orders','totalPrice'));
     }
 
     public function cart_search(Request $request)
@@ -137,6 +183,7 @@ class HomeController extends Controller
     if ($search) {
         // If there's a search query, fetch all matching records without pagination
         $show = Cart::with('product')
+        ->where('user_id', $user_id) 
             ->whereHas('product', function ($query) use ($search) {
                 $query->where('productName', 'LIKE', '%' . $search . '%');
             })
@@ -146,8 +193,9 @@ class HomeController extends Controller
         $show = Cart::where('user_id', Auth::id())->paginate(5);
     }
     $count = Cart::where('user_id', $user_id)->count();
+    $orders = Order::where('user_id', $user_id)->count();
 
-    return view('home.cart_items', compact('show','count'));
+    return view('home.cart_items', compact('show','count','orders'));
     
 }
 
@@ -228,6 +276,47 @@ class HomeController extends Controller
     // Redirect or show a success message
     return redirect()->back();
 }
+
+public function my_orders()
+    {
+
+        $user_id = Auth::id();
+        $allOrders = Order::where('user_id', Auth::id())->get();
+        $totalPrice = $allOrders->sum('total_price');
+        $count = Cart::where('user_id', $user_id)->count();
+        $orders = Order::where('user_id', $user_id)->count();
+        $show = Order::where('user_id', $user_id)->paginate(5);
+
+        return view('home.my_orders',compact('count','orders','show','totalPrice'));
+    }
+
+
+    public function orders_search(Request $request)
+    {
+        $search = $request->input('search', '');
+        $user_id = Auth::id();
+    
+        // Check if there is a search query
+        if ($search) {
+            // If there's a search query, fetch all matching records without pagination
+            $show = Order::with('product')
+                ->where('user_id', $user_id) 
+                ->whereHas('product', function ($query) use ($search) {
+                    $query->where('productName', 'LIKE', '%' . $search . '%');
+                })
+                ->get(); // Use get() to fetch all results without pagination
+        } else {
+            // If there's no search query, paginate the results
+            $show = Order::where('user_id', Auth::id())->paginate(5);
+        }
+        $count = Cart::where('user_id', $user_id)->count();
+        $orders = Order::where('user_id', $user_id)->count();
+    
+        return view('home.my_orders', compact('show','count','orders'));
+        
+    }
+
+
 
 
 

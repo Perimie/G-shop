@@ -125,7 +125,9 @@
               @endif
           </div>
       </div>
+      
     </div>
+    
 
     <!-- Modal Structure -->
     <div id="myModal" class="modal fade" role="dialog">
@@ -153,8 +155,11 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
+            
         </div>
+        
     </div>
+   
 
     <!-- JavaScript files-->
     <script src="{{asset('admincss/vendor/jquery/jquery.min.js')}}"></script>
@@ -197,6 +202,20 @@
                 }
             });
         });
+    </script>
+    
+    <script>
+    $(document).ready(function(){
+        $('#myModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('id'); // Extract info from data-* attributes
+            var status = button.data('name'); // Current status
+            
+            var modal = $(this);
+            modal.find('#editStatus').val(status); // Set the dropdown to the current status
+            modal.find('#editForm').attr('action', '/on_my_way/' + id); // Set form action
+        });
+    });
     </script>
   </body>
 </html>

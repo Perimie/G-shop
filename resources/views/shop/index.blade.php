@@ -13,9 +13,9 @@
   </div>
   <!-- end hero area -->
 
-  <!-- shop section -->
-  @include('shop.shop')
-  <!-- end shop section -->
+  <div id="product-container">
+    @include('shop.shop')
+  </div>
   <!-- info section -->
   @include('shop.info')
   <!-- end info section -->

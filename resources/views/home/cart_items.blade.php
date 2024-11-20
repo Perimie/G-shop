@@ -47,16 +47,10 @@
             <button class="btn btn-outline-success mb-5" type="submit">Search</button>
         </form>
 
-        <?php
-            $value = 0; // Initialize total
-            foreach ($show as $shows) {
-                $value += $shows->product->price; // Add each product's price to the total
-            }
-        ?>
 
         <!-- Display total at the top of the table -->
         <div>
-            <h3>Total: ₱ {{$value}}</h3>
+            <h3>Total value on your Cart: ₱ {{$totalPrice}}</h3>
         </div>
 
         <div id="myModal" class="modal fade" role="dialog">
@@ -79,6 +73,7 @@
                                 <label for="receiverNumber">Receiver Phone number:</label>
                                 <input type="text" class="form-control" id="receiverNumber" name="phone" value="{{ Auth::user()->phone }}" required>
                         
+                                
                                 <label for="receiverQuantity">Quantity:</label>
                                 <input type="number" class="form-control" id="receiverQuantity" name="quantity" required min="1" value="1">
                         
@@ -91,7 +86,8 @@
                                 <input type="hidden" id="calculatedPrice" name="total_price">
                         
                             </div>
-                            <button type="submit" class="btn btn-success">Place Order</button>
+                            <button type="submit" class="btn btn-primary">Cash On Delivery</button>
+                            <a href="" class="btn btn-success">Pay Using Card</a>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -142,11 +138,11 @@
             </tbody>
         </table>
 
-        @if (isset($show->links))
+       
         <div class="pagination justify-content-center">
             {{ $show->links() }} 
         </div>
-        @endif
+     
     </div>
 
     <!-- info section -->
@@ -181,29 +177,39 @@
     </script>
 
     <script>
-            $(document).ready(function () {
-        $('#myModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var id = button.data('id'); // Extract the cart item ID from data-id
-            var price = button.data('price'); // Extract the product price from data-price
+                $(document).ready(function () {
+            $('#myModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var id = button.data('id'); // Extract the cart item ID from data-id
+                var price = button.data('price'); // Extract the product price from data-price
 
-            var modal = $(this);
-            modal.find('#checkOut').attr('action', '/confirm_order/' + id);
+                var modal = $(this);
+                modal.find('#checkOut').attr('action', '/confirm_order/' + id);
 
-            // Set initial price display
-            $('#totalPrice').text(price);
+                // Set initial price display
+                $('#totalPrice').text(price); // Set initial total price (just the unit price)
 
-            // Update total price based on quantity
-            $('#receiverQuantity').on('input', function () {
-                var quantity = $(this).val();
-                var total = quantity * price;
-                $('#totalPrice').text(total.toFixed(2)); // Update total price dynamically
+                // Update total price based on quantity change
+                $('#receiverQuantity').on('input', function () {
+                    var quantity = $(this).val();
+                    var total = quantity * price;
+                    $('#totalPrice').text(total.toFixed(2)); // Update the total price dynamically
 
-                // Update the hidden field with the calculated price
-                $('#calculatedPrice').val(total.toFixed(2));
+                    // Update the hidden field with the calculated total price
+                    $('#calculatedPrice').val(total.toFixed(2));
+                });
+
+                // Ensure the hidden input field is populated correctly on form submit
+                $('#checkOut').on('submit', function() {
+                    var quantity = $('#receiverQuantity').val();
+                    var total = quantity * price;
+
+                    // Ensure the hidden input value is updated before submission
+                    $('#calculatedPrice').val(total.toFixed(2));
+                });
             });
         });
-    });
+
 
     </script>
 

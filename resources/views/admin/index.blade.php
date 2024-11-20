@@ -18,6 +18,8 @@
              <!--dashboard-->
             @include('admin.dashboard')
             <!--End dashboard-->
+
+            @include('admin.footer')
       </div>
     </div>
     <!-- JavaScript files-->

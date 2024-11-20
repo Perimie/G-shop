@@ -38,5 +38,36 @@
 
         @endforeach
       </div>
+      <div class="d-flex justify-content-center mt-4">
+        {{ $product->links() }}
+      </div>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Listen for clicks on pagination links
+        document.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A' && e.target.closest('.pagination')) {
+            e.preventDefault();
+    
+            // Fetch the URL from the clicked link
+            const url = e.target.href;
+    
+            // Use AJAX to load the new page
+            fetch(url, {
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            })
+            .then(response => response.text())
+            .then(html => {
+              // Replace the product container with the new HTML
+              document.getElementById('product-container').innerHTML = html;
+            })
+            .catch(error => console.error('Error loading pagination:', error));
+          }
+        });
+      });
+    </script>
+    
   </section>
