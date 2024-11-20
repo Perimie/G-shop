@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\ContactMail;
 use Illuminate\Support\Facades\Mail;
+use Session;
+use Stripe;
 
 
 class HomeController extends Controller
@@ -315,6 +317,47 @@ public function my_orders()
         return view('home.my_orders', compact('show','count','orders'));
         
     }
+
+    // for future use
+
+    // public function stripe()
+
+    // {
+        
+
+    //     return view('home.stripe');
+
+    // }
+    // public function stripePost(Request $request)
+
+    // {
+
+    //     Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    
+
+    //     Stripe\Charge::create ([
+
+    //             "amount" => 100 * 100,
+
+    //             "currency" => "php",
+
+    //             "source" => $request->stripeToken,
+
+    //             "description" => "Payment to your Order/s" 
+
+    //     ]);
+
+      
+
+    //     Session::flash('success', 'Payment successful!');
+
+              
+
+    //     return back();
+
+    // }
+
 
 
 

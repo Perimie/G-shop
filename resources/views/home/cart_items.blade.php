@@ -86,7 +86,8 @@
                                 <input type="hidden" id="calculatedPrice" name="total_price">
                         
                             </div>
-                            <button type="submit" class="btn btn-primary">Place Order</button>
+                            <button type="submit" class="btn btn-success">Place Order</button>
+                            {{-- <a class="btn btn-primary" href="{{ route('stripe') }}">Pay with card</a> --}}
                             
                         </form>
                     </div>
@@ -176,42 +177,41 @@
         }
     </script>
 
-    <script>
-                $(document).ready(function () {
-            $('#myModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var id = button.data('id'); // Extract the cart item ID from data-id
-                var price = button.data('price'); // Extract the product price from data-price
+<script>
+    $(document).ready(function () {
+        $('#myModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var id = button.data('id'); // Extract the cart item ID from data-id
+            var price = button.data('price'); // Extract the product price from data-price
 
-                var modal = $(this);
-                modal.find('#checkOut').attr('action', '/confirm_order/' + id);
+            var modal = $(this);
+            modal.find('#checkOut').attr('action', '/confirm_order/' + id);
 
-                // Set initial price display
-                $('#totalPrice').text(price); // Set initial total price (just the unit price)
+            // Set initial price display in the modal
+            $('#totalPrice').text(price); // Set initial total price (just the unit price)
 
-                // Update total price based on quantity change
-                $('#receiverQuantity').on('input', function () {
-                    var quantity = $(this).val();
-                    var total = quantity * price;
-                    $('#totalPrice').text(total.toFixed(2)); // Update the total price dynamically
+            // Update total price based on quantity change
+            $('#receiverQuantity').on('input', function () {
+                var quantity = $(this).val();
+                var total = quantity * price;
+                $('#totalPrice').text(total.toFixed(2)); // Update the total price dynamically
 
-                    // Update the hidden field with the calculated total price
-                    $('#calculatedPrice').val(total.toFixed(2));
-                });
+                // Update the hidden field with the calculated total price
+                $('#calculatedPrice').val(total.toFixed(2)); // This will hold the total price value to be passed to the backend
+            });
 
-                // Ensure the hidden input field is populated correctly on form submit
-                $('#checkOut').on('submit', function() {
-                    var quantity = $('#receiverQuantity').val();
-                    var total = quantity * price;
+            // Ensure the hidden input field is populated correctly on form submit
+            $('#checkOut').on('submit', function() {
+                var quantity = $('#receiverQuantity').val();
+                var total = quantity * price;
 
-                    // Ensure the hidden input value is updated before submission
-                    $('#calculatedPrice').val(total.toFixed(2));
-                });
+                // Ensure the hidden input value is updated before submission
+                $('#calculatedPrice').val(total.toFixed(2));
             });
         });
+    });
+</script>
 
-
-    </script>
 
 </body>
 

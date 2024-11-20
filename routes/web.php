@@ -69,7 +69,10 @@ Route::get('remove_tocart/{id}', [HomeController::class, 'remove_tocart'])->midd
 
 Route::post('/send-contact', [HomeController::class, 'sendContact'])->name('sendContact')->middleware(['auth', 'verified']);
 
-
+// Route::controller(HomeController::class)->group(function(){
+//     Route::get('stripe', 'stripe')->name('stripe');
+//     Route::post('stripe', 'stripePost')->name('stripe.post');
+// });
 
 
 
