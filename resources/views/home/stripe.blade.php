@@ -34,6 +34,7 @@
 
                         <h3 class="panel-title" >Payment Details</h3>
                        
+                        
                 </div>
 
                 <div class="panel-body">
@@ -51,6 +52,8 @@
                         </div>
 
                     @endif
+
+                    
 
     
 
@@ -71,8 +74,19 @@
                             id="payment-form">
 
                         @csrf
+                        
 
-    
+                        <div class='form-row row'>
+
+                            <div class='col-xs-12 form-group required'>
+
+                                <label class='control-label'>Amount to Pay</label> <input
+
+                                    class='form-control' size='4' type='text' name='amount'>
+
+                            </div>
+
+                        </div>
 
                         <div class='form-row row'>
 

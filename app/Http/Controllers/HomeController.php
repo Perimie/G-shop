@@ -318,7 +318,7 @@ public function my_orders()
         
     }
 
-    // for future use
+
 
     // public function stripe()
 
@@ -332,13 +332,19 @@ public function my_orders()
 
     // {
 
+    //     $request->validate([
+    //         'amount' => 'required|numeric|min:1', // Ensure amount is a valid number greater than 0
+    //     ]);
+    
+    //     $amount = $request->amount;
+
     //     Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
-    
+        
 
     //     Stripe\Charge::create ([
 
-    //             "amount" => 100 * 100,
+    //             "amount" => $amount * 100,
 
     //             "currency" => "php",
 
@@ -348,6 +354,7 @@ public function my_orders()
 
     //     ]);
 
+    //     // dd($amount);
       
 
     //     Session::flash('success', 'Payment successful!');

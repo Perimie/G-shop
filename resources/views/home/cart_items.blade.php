@@ -179,6 +179,7 @@
 
 <script>
     $(document).ready(function () {
+        // When the modal is shown
         $('#myModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var id = button.data('id'); // Extract the cart item ID from data-id
@@ -189,28 +190,31 @@
 
             // Set initial price display in the modal
             $('#totalPrice').text(price); // Set initial total price (just the unit price)
+            $('#receiverQuantity').val(1); // Reset quantity to 1
+            $('#calculatedPrice').val(price.toFixed(2)); // Reset hidden field for total price
 
             // Update total price based on quantity change
             $('#receiverQuantity').on('input', function () {
                 var quantity = $(this).val();
                 var total = quantity * price;
                 $('#totalPrice').text(total.toFixed(2)); // Update the total price dynamically
-
-                // Update the hidden field with the calculated total price
-                $('#calculatedPrice').val(total.toFixed(2)); // This will hold the total price value to be passed to the backend
+                $('#calculatedPrice').val(total.toFixed(2)); // Update the hidden field
             });
+        });
 
-            // Ensure the hidden input field is populated correctly on form submit
-            $('#checkOut').on('submit', function() {
-                var quantity = $('#receiverQuantity').val();
-                var total = quantity * price;
-
-                // Ensure the hidden input value is updated before submission
-                $('#calculatedPrice').val(total.toFixed(2));
-            });
+        // When the modal is hidden
+        $('#myModal').on('hidden.bs.modal', function () {
+            // Reset modal content
+            $('#receiverName').val('{{ Auth::user()->name }}'); // Reset receiver name
+            $('#receiverAddress').val(''); // Clear the receiver address
+            $('#receiverNumber').val('{{ Auth::user()->phone }}'); // Reset phone number
+            $('#receiverQuantity').val(1); // Reset quantity to 1
+            $('#totalPrice').text('0'); // Reset total price display
+            $('#calculatedPrice').val('0'); // Reset hidden field for total price
         });
     });
 </script>
+
 
 
 </body>
